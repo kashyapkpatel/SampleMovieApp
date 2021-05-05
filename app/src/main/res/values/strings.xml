@@ -1,0 +1,26 @@
+<resources>
+
+    <string name="app_name">Movies App</string>
+    <string name="app_info">App Info</string>
+
+    <string name="error_invalid_email">Please enter the valid email !</string>
+    <string name="error_invalid_password">Password length must be between 8 to 15 characters !</string>
+    <string name="error_generic_failure">Something went wrong.</string>
+    <string name="error_server_error">Internal server error.</string>
+    <string name="error_internet_unavailable">Internet unavailable.</string>
+    <string name="error_socket_timeout">Socket timeout.</string>
+
+    <string name="cd_movie_image">This is the Movie Image</string>
+
+    <string name="msg_no_movies">No movies found.</string>
+    <string name="msg_no_info">No Info</string>
+    <string name="msg_loading">Loading..</string>
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+
+    <string name="str_show_app_info">Show App Info</string>
+    <string name="str_login">Login</string>
+    <string name="str_switch_theme">Switch Theme</string>
+
+</resources>
