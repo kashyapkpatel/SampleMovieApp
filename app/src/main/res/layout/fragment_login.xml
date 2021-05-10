@@ -3,70 +3,132 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
+        <variable
+            name="emailError"
+            type="java.lang.String" />
+
+        <variable
+            name="passwordError"
+            type="java.lang.String" />
+
+        <variable
+            name="isLoginEnabled"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="onTextChanged"
+            type="androidx.databinding.adapters.TextViewBindingAdapter.OnTextChanged" />
+
+        <variable
+            name="viewModel"
+            type="com.kashyapkpatel.sampleapp.viewmodel.LoginViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutEmailId"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/med_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:startIconCheckable="true"
-            app:startIconDrawable="@drawable/ic_baseline_email_24">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etEmailId"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_email"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceSubtitle1" />
+                android:layout_height="match_parent">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/tvLblLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/med_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:padding="@dimen/mid_padding"
+                    android:text="@string/str_login"
+                    android:textAppearance="?attr/textAppearanceHeadline4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/med_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputLayoutEmailId"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="?colorPrimary"
-            app:startIconCheckable="true"
-            app:startIconDrawable="@drawable/ic_baseline_password_24">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutEmailId"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/med_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLblLogin"
+                    app:setErrorText="@{emailError}"
+                    app:startIconCheckable="true"
+                    app:startIconDrawable="@drawable/ic_baseline_email_24">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_password"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmailId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:onTextChanged="@{onTextChanged}"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/med_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/str_login"
-            app:layout_constraintTop_toBottomOf="@+id/inputLayoutPassword" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLayoutPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/med_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/inputLayoutEmailId"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="?colorPrimary"
+                    app:setErrorText="@{passwordError}"
+                    app:startIconCheckable="true"
+                    app:startIconDrawable="@drawable/ic_baseline_password_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:onTextChanged="@{onTextChanged}"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/med_margin"
+                    android:layout_marginTop="@dimen/big_margin"
+                    android:layout_marginEnd="@dimen/med_margin"
+                    android:layout_marginBottom="@dimen/big_margin"
+                    android:enabled="@{isLoginEnabled}"
+                    android:onClick="@{() -> viewModel.login()}"
+                    android:text="@string/str_login"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/inputLayoutPassword" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

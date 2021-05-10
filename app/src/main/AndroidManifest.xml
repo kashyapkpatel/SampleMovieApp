@@ -14,7 +14,9 @@
         android:theme="@style/Theme.MyApp"
         android:usesCleartextTraffic="true">
 
-        <activity android:name="com.kashyapkpatel.sampleapp.ui.HomeActivity">
+        <activity
+            android:name="com.kashyapkpatel.sampleapp.ui.HomeActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

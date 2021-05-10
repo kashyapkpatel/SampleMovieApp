@@ -1,17 +1,20 @@
 package com.kashyapkpatel.sampleapp.ui
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.kashyapkpatel.sampleapp.R
 import com.kashyapkpatel.sampleapp.databinding.ActivityMainBinding
+import com.kashyapkpatel.sampleapp.di.ViewModelProviderFactory
 import com.kashyapkpatel.sampleapp.interfaces.IFragmentCallbacks
 import com.kashyapkpatel.sampleapp.util.newFragmentInstance
+import com.kashyapkpatel.sampleapp.viewmodel.HomeViewModel
 import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
 class HomeActivity : DaggerAppCompatActivity(),
     IFragmentCallbacks,
@@ -23,15 +26,21 @@ class HomeActivity : DaggerAppCompatActivity(),
         const val KEY_IS_MAIN = "IsMain"
     }
 
+    @Inject
+    lateinit var viewModelProviderFactory: ViewModelProviderFactory
+
+    private val homeViewModel by viewModels<HomeViewModel> { viewModelProviderFactory }
+
     lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        binding.viewModel = homeViewModel
         binding.toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
         setSupportActionBar(binding.toolbar)
         loadInitialFragment(savedInstanceState)
-        setupViews()
+        setupBindingsAndObservables()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -165,16 +174,17 @@ class HomeActivity : DaggerAppCompatActivity(),
         }
     }
 
-    private fun setupViews() {
-        binding.fab.setOnClickListener {
+    private fun setupBindingsAndObservables() {
+        binding.isDarkTheme = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+        homeViewModel.actionLiveDataShowAppInfoClicked.observe(this) { unit ->
             val appInfoFragment = newFragmentInstance<AppInfoFragment>()
             showFragment(appInfoFragment, AppInfoFragment.TAG)
         }
-        binding.switchTheme.setOnCheckedChangeListener { buttonView, isChecked ->
+        homeViewModel.actionLiveDataOnThemeChanged.observe(this) { isChecked ->
             if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
     }

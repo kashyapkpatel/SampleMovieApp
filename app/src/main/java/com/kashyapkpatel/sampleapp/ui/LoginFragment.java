@@ -2,9 +2,7 @@ package com.kashyapkpatel.sampleapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +11,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.kashyapkpatel.sampleapp.R;
 import com.kashyapkpatel.sampleapp.databinding.FragmentLoginBinding;
 import com.kashyapkpatel.sampleapp.interfaces.IFragmentCallbacks;
+import com.kashyapkpatel.sampleapp.viewmodel.LoginViewModel;
 
 import static com.kashyapkpatel.sampleapp.ui.HomeActivity.KEY_IS_MAIN;
 
@@ -27,6 +27,8 @@ public class LoginFragment extends BaseFragment {
     private static final int PASSWORD_MAX_LENGTH = 15;
 
     private FragmentLoginBinding binding;
+
+    private LoginViewModel loginViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -40,26 +42,25 @@ public class LoginFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
+        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+        binding.setViewModel(loginViewModel);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpViews();
+        setupBindingsAndObservables();
     }
 
-    private void setUpViews() {
+    private void setupBindingsAndObservables() {
         iFragmentCallbacks.updateTitle(getString(R.string.app_name));
-        binding.btnLogin.setEnabled(false);
-        binding.etEmailId.addTextChangedListener(validationTextWatcher);
-        binding.etPassword.addTextChangedListener(validationTextWatcher);
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // No Need to check validation as this button is enabled only when all validations are satisfied
-                goToNextScreen();
-            }
+        binding.setIsLoginEnabled(false);
+        binding.setOnTextChanged((s, start, before, count) -> validateEmailAndPassword());
+        // Observe the snackbar action from the view model and show a snackbar when a new action comes in
+        loginViewModel.getActionLiveDataLoginClicked().observe(this, unit -> {
+            // No Need to check validation as this button is enabled only when all validations are satisfied
+            goToNextScreen();
         });
     }
 
@@ -69,9 +70,9 @@ public class LoginFragment extends BaseFragment {
         }
         boolean emailValid = isValidEmail(binding.etEmailId.getText());
         boolean passwordValid = isValidPassword(binding.etPassword.getText());
-        binding.inputLayoutEmailId.setError(emailValid ? null : getString(R.string.error_invalid_email));
-        binding.inputLayoutPassword.setError(passwordValid ? null : getString(R.string.error_invalid_password));
-        binding.btnLogin.setEnabled(emailValid && passwordValid);
+        binding.setEmailError(emailValid ? null : getString(R.string.error_invalid_email));
+        binding.setPasswordError(passwordValid ? null : getString(R.string.error_invalid_password));
+        binding.setIsLoginEnabled(emailValid && passwordValid);
     }
 
     private void goToNextScreen() {
@@ -90,21 +91,4 @@ public class LoginFragment extends BaseFragment {
         boolean validLength = target.length() >= PASSWORD_MIN_LENGTH && target.length() <= PASSWORD_MAX_LENGTH;
         return !TextUtils.isEmpty(target) && validLength;
     }
-
-    private TextWatcher validationTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            validateEmailAndPassword();
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
 }
