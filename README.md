@@ -14,7 +14,11 @@
 - Using Restful Web APIs load the list of popular Movies on this screen in a grid view with number of columns as 2.
 - Each Item contains the name and image. Name to be taken from the “title” and image from “poster_path” from the response.
 
-> Note: As the API key used for TMDB is secret and confidential, You need to add [secure.properties] with contents as [TMDB_API_KEY = <YourApiKey>] for this project to run successfully.
+> Note: As the API key used for TMDB is secret and confidential, You need to update [secure.properties] with contents as below for this project to run successfully.
+  
+  ```sh
+TMDB_API_KEY = <YourApiKey>
+```
 
 ## Run Unit Tests
 
